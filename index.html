@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweeto – Artisan Pastries & Desserts</title>
+    <meta name="description"
+        content="Sweeto – Handcrafted pastries, cakes, and desserts delivered fresh to your door. Order online today.">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ==================== LOADER ==================== -->
+    <div class="loader-container" id="loader">
+        <div class="loader-logo">Sweeto</div>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ==================== CART OVERLAY ==================== -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <!-- ==================== CART SIDEBAR ==================== -->
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2><i class="fas fa-shopping-bag"></i> My Cart</h2>
+            <button class="close-cart" id="close-cart" aria-label="Close cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="cart-empty">
+                <i class="fas fa-cookie-bite"></i>
+                <p>Your cart is empty.<br>Start adding some sweet treats!</p>
+            </div>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display:none;">
+            <div class="cart-total">
+                <span>Total</span>
+                <span class="total-price" id="cart-total-price">$0.00</span>
+            </div>
+            <button class="checkout-btn" id="open-checkout"><i class="fas fa-credit-card"></i> &nbsp;Proceed to
+                Checkout</button>
+        </div>
+    </aside>
+
+    <!-- ==================== WISHLIST SIDEBAR ==================== -->
+    <aside class="cart-sidebar" id="wishlist-sidebar">
+        <div class="cart-header">
+            <h2><i class="fas fa-heart"></i> My Wishlist</h2>
+            <button class="close-cart" id="close-wishlist" aria-label="Close wishlist"><i
+                    class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="wishlist-items">
+            <!-- Items injected via JS -->
+        </div>
+    </aside>
+
+    <!-- ==================== HEADER ==================== -->
+    <header id="main-header">
+        <a href="#home" class="logo">
+            <i class="fas fa-birthday-cake"></i>
+            <span>Sweeto</span><span style="background:none;-webkit-text-fill-color:var(--dark)">.</span>
+        </a>
+
+        <nav class="navbar" id="navbar">
+            <a class="active" href="#home">Home</a>
+            <a href="#desserts">Desserts</a>
+            <a href="#about">About</a>
+            <a href="#menu">Menu</a>
+            <a href="#review">Reviews</a>
+            <a href="#order">Order</a>
+        </nav>
+
+        <div class="header-icons">
+            <i class="fas fa-bars" id="menu-bars" aria-label="Toggle menu"></i>
+            <i class="fas fa-search" id="search-icon" aria-label="Search"></i>
+            <a href="#" class="fas fa-heart" id="open-wishlist" aria-label="Wishlist" style="position:relative;">
+                <span class="cart-badge" id="wishlist-badge">0</span>
+            </a>
+            <a href="#" class="fas fa-shopping-cart" id="open-cart" aria-label="Cart" style="position:relative;">
+                <span class="cart-badge" id="cart-badge">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ==================== SEARCH FORM ==================== -->
+    <form action="" id="search-form" role="search">
+        <div class="search-input-row">
+            <input type="search" placeholder="Search for desserts, cakes, pastries..." id="search-box"
+                autocomplete="off">
+            <label for="search-box" class="fas fa-search"></label>
+            <i class="fas fa-times" id="close"></i>
+        </div>
+        <div id="search-results" class="search-results" role="listbox" aria-label="Search results"></div>
+    </form>
+
+    <!-- ==================== QUICK VIEW MODAL ==================== -->
+    <div class="quick-view-modal" id="quick-view-modal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" id="close-quick-view"></i>
+            <div class="modal-body">
+                <div class="modal-img">
+                    <img src="" id="qv-img" alt="Product Image">
+                </div>
+                <div class="modal-info">
+                    <h3 id="qv-title">Product Name</h3>
+                    <p id="qv-desc">Product description goes here...</p>
+                    <div class="price" id="qv-price">$0.00</div>
+                    <button class="btn add-to-cart" id="qv-add-btn" data-name="" data-price="" data-img="">Add to
+                        Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CHECKOUT MODAL ==================== -->
+    <div class="checkout-modal" id="checkout-modal">
+        <div class="modal-content checkout-content">
+            <i class="fas fa-times close-modal" id="close-checkout"></i>
+            <h2>Secure Checkout <i class="fas fa-lock"
+                    style="font-size:1.8rem;color:var(--primary);margin-left:5px"></i></h2>
+
+            <div class="checkout-grid">
+                <!-- Order Summary Column -->
+                <div class="checkout-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-items" id="checkout-items">
+                        <!-- Injected via JS -->
+                    </div>
+                    <div class="summary-total">
+                        <span>Total to Pay:</span>
+                        <span id="checkout-total-price">$0.00</span>
+                    </div>
+                </div>
+
+                <!-- Delivery & Payment Form Column -->
+                <div class="checkout-form-container">
+                    <h3>Delivery Details</h3>
+                    <form id="secure-checkout-form">
+                        <div class="inputBox">
+                            <div class="input">
+                                <span>Full Name</span>
+                                <input type="text" id="chk-name" placeholder="John Doe" required>
+                            </div>
+                            <div class="input">
+                                <span>Phone Number</span>
+                                <input type="text" id="chk-phone" placeholder="(123) 456-7890" required>
+                            </div>
+                        </div>
+                        <div class="inputBox">
+                            <div class="input w-100">
+                                <span>Delivery Address</span>
+                                <textarea id="chk-address" placeholder="123 Sweet Street, City" required
+                                    rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top:2rem;">Payment Method</h3>
+                        <div class="payment-methods">
+                            <label class="pay-method">
+                                <input type="radio" name="payment" value="card" checked>
+                                <span><i class="fas fa-credit-card"></i> Credit Card</span>
+                            </label>
+                            <label class="pay-method">
+                                <input type="radio" name="payment" value="cash">
+                                <span><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn w-100" style="width: 100%; margin-top: 2rem;">Place Order Now
+                            &nbsp;<i class="fas fa-check"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HOME / HERO ==================== -->
+    <section class="home" id="home">
+        <div class="swiper home-slider">
+            <div class="swiper-wrapper wrapper">
+
+                <div class="swiper-slide slide">
+                    <div class="content">
+                        <span class="badge">Our Special Desserts</span>
+                        <h3>Chocolate Face Cake</h3>
+                        <p>Vanilla sponge cake with whipped cream frosting, caramel shavings and the top glazed with
+                            rich Belgian chocolate.</p>
+                        <div class="hero-btns">
+                            <a href="#order" class="btn">Order Now <i class="fas fa-arrow-right"></i></a>
+                            <a href="#menu" class="btn btn-ghost">Explore Menu</a>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img src="menu9.jpg" alt="Chocolate Face Cake">
+                    </div>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <div class="content">
+                        <span class="badge">Our Special Desserts</span>
+                        <h3>Fruit Tart</h3>
+                        <p>Chocolate filled tart with a crispy, light crust, topped with vibrant seasonal fruits and a
+                            glaze finish.</p>
+                        <div class="hero-btns">
+                            <a href="#order" class="btn">Order Now <i class="fas fa-arrow-right"></i></a>
+                            <a href="#menu" class="btn btn-ghost">Explore Menu</a>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img src="menu11.png" alt="Fruit Tart">
+                    </div>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <div class="content">
+                        <span class="badge">Our Special Desserts</span>
+                        <h3>Naked Vanilla Cake</h3>
+                        <p>Vanilla sponge cake with cream cheese frosting and fresh strawberry toppings — beauty in
+                            simplicity.</p>
+                        <div class="hero-btns">
+                            <a href="#order" class="btn">Order Now <i class="fas fa-arrow-right"></i></a>
+                            <a href="#menu" class="btn btn-ghost">Explore Menu</a>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img src="menu12.jpg" alt="Naked Vanilla Cake">
+                    </div>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <div class="content">
+                        <span class="badge">Our Special Desserts</span>
+                        <h3>Chocolate Swirl Pound Cake</h3>
+                        <p>Chocolate swirl pound cake with dark and white chocolate dripping glaze — a showstopper at
+                            every table.</p>
+                        <div class="hero-btns">
+                            <a href="#order" class="btn">Order Now <i class="fas fa-arrow-right"></i></a>
+                            <a href="#menu" class="btn btn-ghost">Explore Menu</a>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img src="menu8.jpg" alt="Chocolate Swirl Pound Cake">
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- ==================== STATS SECTION ==================== -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="1200">0</span>
+                <span class="stat-label">Happy Customers</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="85">0</span>
+                <span class="stat-label">Menu Items</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="12">0</span>
+                <span class="stat-label">Years of Baking</span>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="5">0</span>
+                <span class="stat-label">City Locations</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== DESSERTS SECTION ==================== -->
+    <section class="desserts" id="desserts">
+
+        <h3 class="sub-heading">Our Desserts</h3>
+        <h1 class="heading">Popular Desserts</h1>
+
+        <!-- Category Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="cake">Cakes</button>
+            <button class="filter-tab" data-filter="bowl">Bowls</button>
+            <button class="filter-tab" data-filter="pastry">Pastries</button>
+            <button class="filter-tab" data-filter="frozen">Frozen</button>
+        </div>
+
+        <div class="box-container">
+
+            <div class="box reveal" data-category="bowl">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu31.png" alt="Yogurt Bowl">
+                <h3>Yogurt Bowl</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$3.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Yogurt Bowl" data-price="3.99" data-img="menu31.png">Add
+                    to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="cake">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu21.jpg" alt="Pie Cake">
+                <h3>Pie Cake</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$8.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Pie Cake" data-price="8.99" data-img="menu21.jpg">Add to
+                    Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="pastry">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu30.png" alt="Chocolate Brownie">
+                <h3>Chocolate Brownie</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$8.00</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Chocolate Brownie" data-price="8.00"
+                    data-img="menu30.png">Add to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="frozen">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu22.jpg" alt="Ice-cream Cake">
+                <h3>Ice-cream Cake</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$9.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Ice-cream Cake" data-price="9.99"
+                    data-img="menu22.jpg">Add to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="pastry">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu23.jpg" alt="Macaron Set">
+                <h3>Macaron Set</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$8.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Macaron Set" data-price="8.99" data-img="menu23.jpg">Add
+                    to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="bowl">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu27.jpg" alt="Brownie Parfait">
+                <h3>Brownie Parfait</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$5.00</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Brownie Parfait" data-price="5.00"
+                    data-img="menu27.jpg">Add to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="cake">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu6.jpg" alt="Cupcake Set">
+                <h3>Cupcake Set</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$5.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Cupcake Set" data-price="5.99" data-img="menu6.jpg">Add
+                    to Cart</a>
+            </div>
+
+            <div class="box reveal" data-category="cake">
+                <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                <a href="#" class="fas fa-eye" aria-label="View"></a>
+                <img src="menu33.png" alt="Red-velvet Cake">
+                <h3>Red-velvet Cake</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price-tag"><span>$9.99</span></div>
+                <a href="#" class="btn add-to-cart" data-name="Red-velvet Cake" data-price="9.99"
+                    data-img="menu33.png">Add to Cart</a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==================== ABOUT SECTION ==================== -->
+    <section class="about" id="about">
+
+        <h3 class="sub-heading">About Us</h3>
+        <h1 class="heading">Why Choose Sweeto?</h1>
+
+        <div class="row">
+
+            <div class="image reveal-left">
+                <img src="menu36.jpg" alt="Our Bakery">
+                <div class="img-badge">
+                    <strong>12+</strong>
+                    <span>Years of Baking</span>
+                </div>
+            </div>
+
+            <div class="content reveal-right">
+                <h3>Crafted with Love, Served with Pride</h3>
+                <p>At Sweeto, every dessert is a labour of love. We source only the finest ingredients — Belgian
+                    chocolate, organic cream, and locally grown fruits — to create pastries and cakes that are as
+                    beautiful as they are delicious.</p>
+                <p>Our master bakers have honed their craft over 12 years, blending classical French techniques with
+                    bold, modern flavour combinations. Whether it's a birthday cake or a casual sweet craving, we have
+                    something that will make your day sweeter.</p>
+
+                <div class="icons-container">
+                    <div class="icon-card">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Free Delivery</span>
+                    </div>
+                    <div class="icon-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Easy Payments</span>
+                    </div>
+                    <div class="icon-card">
+                        <i class="fas fa-headset"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                    <div class="icon-card">
+                        <i class="fas fa-certificate"></i>
+                        <span>Quality Assured</span>
+                    </div>
+                </div>
+
+                <a href="#menu" class="btn" style="margin-top:2rem;">Explore Our Menu <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==================== MENU SECTION ==================== -->
+    <section class="menu" id="menu">
+
+        <h3 class="sub-heading">Our Menu</h3>
+        <h1 class="heading">Today's Speciality</h1>
+
+        <div class="box-container">
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu44.jpg" alt="Ice-cream Bowl">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Ice-cream Bowl</h3>
+                    <p>Light ice-cream served in a crunchy waffle bowl with your choice of toppings.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Ice-cream Bowl" data-price="3.00"
+                            data-img="menu44.jpg">Add to Cart</a>
+                        <span class="price">$3.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu43.jpg" alt="Chocolate Ice-cream Cake">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Chocolate Ice-cream Cake</h3>
+                    <p>Fluffy ice-cream cake, covered with chocolate ganache, choco sticks, and topped with fresh
+                        fruits.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Chocolate Ice-cream Cake" data-price="10.00"
+                            data-img="menu43.jpg">Add to Cart</a>
+                        <span class="price">$10.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu45.png" alt="Fruit Juice">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Fruit Juice</h3>
+                    <p>Freshly squeezed fruit juices to perfectly refresh your palate between bites.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Fruit Juice" data-price="7.99"
+                            data-img="menu45.png">Add to Cart</a>
+                        <span class="price">$7.99</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu48.jpg" alt="Croissants">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Croissants</h3>
+                    <p>Super-flaky chocolate-filled croissants, drizzled with melted chocolate and dusted with powdered
+                        sugar.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Croissants" data-price="5.00"
+                            data-img="menu48.jpg">Add to Cart</a>
+                        <span class="price">$5.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu42.png" alt="Chocolate Pancakes">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Chocolate Pancakes</h3>
+                    <p>Fluffy chocolate pancakes drizzled with melted chocolate and topped with chocolate chips.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Chocolate Pancakes" data-price="10.00"
+                            data-img="menu42.png">Add to Cart</a>
+                        <span class="price">$10.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu60.jpg" alt="Fruit Pavlova">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Fruit Pavlova</h3>
+                    <p>Crispy pavlova topped with whipped meringue and a rainbow of fresh seasonal fruits.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Fruit Pavlova" data-price="15.00"
+                            data-img="menu60.jpg">Add to Cart</a>
+                        <span class="price">$15.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu53.jpg" alt="Macarons">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Macarons</h3>
+                    <p>An eight-set box of delicate French macarons in assorted flavours.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Macarons" data-price="12.00"
+                            data-img="menu53.jpg">Add to Cart</a>
+                        <span class="price">$12.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu57.jpg" alt="Chocolate Truffles">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Chocolate Truffles</h3>
+                    <p>A nine-set box of hand-rolled dark chocolate truffles dusted with premium cocoa powder.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Chocolate Truffles" data-price="5.00"
+                            data-img="menu57.jpg">Add to Cart</a>
+                        <span class="price">$5.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu54.jpg" alt="Naked Chocolate Cake">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Naked Chocolate Cake</h3>
+                    <p>Naked chocolate cake with strawberry frosting, topped with an array of fresh fruits.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Naked Chocolate Cake" data-price="7.99"
+                            data-img="menu54.jpg">Add to Cart</a>
+                        <span class="price">$7.99</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu14.jpg" alt="Opera Cake">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Opera Cake</h3>
+                    <p>Classic French coffee-infused chocolate opera cake with paper-thin almond sponge layers.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Opera Cake" data-price="16.99"
+                            data-img="menu14.jpg">Add to Cart</a>
+                        <span class="price">$16.99</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu2.jpg" alt="Chocolate Chip Cookies">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Choco Chip Cookies</h3>
+                    <p>Light and crispy chocolate chip cookies, baked fresh daily with premium chocolate.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Choco Chip Cookies" data-price="3.00"
+                            data-img="menu2.jpg">Add to Cart</a>
+                        <span class="price">$3.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box reveal">
+                <div class="image">
+                    <img src="menu59.jpg" alt="Chocolate Swiss-rolls">
+                    <a href="#" class="fas fa-heart" aria-label="Wishlist"></a>
+                </div>
+                <div class="content">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h3>Chocolate Swiss-rolls</h3>
+                    <p>Tender chocolate sponge rolled with luscious whipped cream frosting — a timeless classic.</p>
+                    <div class="card-footer">
+                        <a href="#" class="btn add-to-cart" data-name="Chocolate Swiss-rolls" data-price="8.00"
+                            data-img="menu59.jpg">Add to Cart</a>
+                        <span class="price">$8.00</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==================== REVIEW SECTION ==================== -->
+    <section class="review" id="review">
+
+        <h3 class="sub-heading">Customer Reviews</h3>
+        <h1 class="heading">What They Say</h1>
+
+        <div class="swiper review-slider">
+            <div class="swiper-wrapper wrapper">
+
+                <div class="swiper-slide slide">
+                    <i class="fas fa-quote-right"></i>
+                    <div class="user">
+                        <img src="model1.jpg" alt="Vishanty Abraham">
+                        <div class="user-info">
+                            <h3>Vishanty Abraham</h3>
+                            <div class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p>"Sweeto has completely ruined other bakeries for me! Their red velvet cake is the most moist and
+                        flavourful I have ever had. The delivery was prompt and the packaging was gorgeous. Absolutely
+                        ordering again!"</p>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <i class="fas fa-quote-right"></i>
+                    <div class="user">
+                        <img src="model2.jpg" alt="George Lincoln">
+                        <div class="user-info">
+                            <h3>George Lincoln</h3>
+                            <div class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p>"I ordered the macarons as a gift for my wife's birthday and she could not stop talking about
+                        them. The flavours were incredibly balanced and the presentation was stunning. Sweeto is our new
+                        family favourite!"</p>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <i class="fas fa-quote-right"></i>
+                    <div class="user">
+                        <img src="model3.jpg" alt="Bahiyyih Okonkwo">
+                        <div class="user-info">
+                            <h3>Bahiyyih Okonkwo</h3>
+                            <div class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p>"The chocolate Swiss-rolls are absolutely divine. I tried them on a friend's recommendation and
+                        now they are my weekly treat. The cream filling is light yet rich — just perfect. Highly
+                        recommend Sweeto to everyone!"</p>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <i class="fas fa-quote-right"></i>
+                    <div class="user">
+                        <img src="model4.jpg" alt="Lee Felix">
+                        <div class="user-info">
+                            <h3>Lee Felix</h3>
+                            <div class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p>"Five stars, no question! The Opera Cake I ordered for my dinner party was a showstopper. My
+                        guests were blown away — both by the taste and the beautiful presentation. Sweeto really
+                        delivers on quality and elegance."</p>
+                </div>
+
+                <div class="swiper-slide slide">
+                    <i class="fas fa-quote-right"></i>
+                    <div class="user">
+                        <img src="model7.jpg" alt="Joshua Bennet">
+                        <div class="user-info">
+                            <h3>Joshua Bennet</h3>
+                            <div class="stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p>"Best pastry shop in the city, hands down. The fruit pavlova I ordered was spectacular — crispy,
+                        creamy, and bursting with freshness. Customer service was also top notch. Will definitely be a
+                        repeat customer!"</p>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ==================== NEWSLETTER SECTION ==================== -->
+    <section class="newsletter">
+        <h3 class="sub-heading">Stay Updated</h3>
+        <h1 class="heading">Get Sweet Deals in Your Inbox</h1>
+        <p>Subscribe to our newsletter and be the first to know about new menu items, seasonal specials, and exclusive
+            discounts just for you.</p>
+        <div class="nl-form">
+            <input type="email" placeholder="Enter your email address" id="nl-email">
+            <button class="btn" id="nl-subscribe"><i class="fas fa-paper-plane"></i> &nbsp;Subscribe</button>
+        </div>
+    </section>
+
+    <!-- ==================== ORDER SECTION ==================== -->
+    <section class="order" id="order">
+
+        <h3 class="sub-heading">Order Now</h3>
+        <h1 class="heading">Affordable & Quick</h1>
+
+        <form action="" id="order-form" novalidate>
+
+            <div class="inputBox">
+                <div class="input">
+                    <span>Your Name</span>
+                    <input type="text" placeholder="Enter your full name" id="order-name" required>
+                </div>
+                <div class="input">
+                    <span>Phone Number</span>
+                    <input type="tel" placeholder="Enter your phone number" id="order-phone" required>
+                </div>
+            </div>
+
+            <div class="inputBox">
+                <div class="input">
+                    <span>Your Order</span>
+                    <input type="text" placeholder="Enter item name" id="order-item" required>
+                </div>
+                <div class="input">
+                    <span>Additional Requests</span>
+                    <input type="text" placeholder="Any special instructions?">
+                </div>
+            </div>
+
+            <div class="inputBox">
+                <div class="input">
+                    <span>Quantity</span>
+                    <input type="number" placeholder="How many?" min="1" id="order-qty">
+                </div>
+                <div class="input">
+                    <span>Date & Time</span>
+                    <input type="datetime-local" id="order-datetime">
+                </div>
+            </div>
+
+            <div class="inputBox">
+                <div class="input">
+                    <span>Delivery Address</span>
+                    <textarea placeholder="Enter your full delivery address" rows="6" required></textarea>
+                </div>
+                <div class="input">
+                    <span>Message / Note</span>
+                    <textarea placeholder="Any note for the baker?" rows="6"></textarea>
+                </div>
+            </div>
+
+            <input type="submit" value="Place Order  🎂" class="btn" id="order-submit">
+
+        </form>
+
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+
+        <div class="box-container">
+
+            <div class="box">
+                <div class="footer-logo">Sweeto.</div>
+                <p class="footer-desc">Handcrafted pastries and desserts made with love. Delivering sweetness to your
+                    doorstep since 2012.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+            </div>
+
+            <div class="box">
+                <h3>Locations</h3>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Lagos</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Abuja</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Port Harcourt</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Kaduna</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Ogun</a>
+            </div>
+
+            <div class="box">
+                <h3>Quick Links</h3>
+                <a href="#home"><i class="fas fa-chevron-right"></i> Home</a>
+                <a href="#desserts"><i class="fas fa-chevron-right"></i> Desserts</a>
+                <a href="#about"><i class="fas fa-chevron-right"></i> About</a>
+                <a href="#menu"><i class="fas fa-chevron-right"></i> Menu</a>
+                <a href="#review"><i class="fas fa-chevron-right"></i> Reviews</a>
+                <a href="#order"><i class="fas fa-chevron-right"></i> Order</a>
+            </div>
+
+            <div class="box">
+                <h3>Contact Info</h3>
+                <a href="tel:+2340000000"><i class="fas fa-phone"></i> +234-000-0000</a>
+                <a href="tel:+2340000012"><i class="fas fa-phone"></i> +234-000-0012</a>
+                <a href="mailto:hello@sweeto.ng"><i class="fas fa-envelope"></i> hello@sweeto.ng</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Lagos, Nigeria – 909967</a>
+                <a href="#"><i class="fas fa-clock"></i> Mon–Sat: 8am – 9pm</a>
+            </div>
+
+        </div>
+
+        <div class="credit">
+            Copyright &copy; 2024 by <span>Sweeto.</span> All rights reserved.
+        </div>
+
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
