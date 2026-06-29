@@ -1245,42 +1245,6 @@ header .header-icons #menu-bars {
     border-radius: 1rem;
 }
 
-/* ===================== STATS SECTION ===================== */
-.stats {
-    background: var(--gradient);
-    padding: 5rem 9%;
-}
-
-.stats .stats-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.stats .stat-item {
-    text-align: center;
-    color: var(--white);
-}
-
-.stats .stat-item .stat-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 5rem;
-    font-weight: 800;
-    line-height: 1;
-    display: block;
-}
-
-.stats .stat-item .stat-label {
-    font-size: 1.4rem;
-    font-weight: 500;
-    opacity: 0.85;
-    letter-spacing: .1rem;
-    text-transform: uppercase;
-    margin-top: .5rem;
-    display: block;
-}
-
 /* ===================== DESSERTS SECTION ===================== */
 .desserts {
     background: var(--light-bg);
