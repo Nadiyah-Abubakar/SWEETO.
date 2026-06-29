@@ -648,39 +648,6 @@ function initScrollReveal() {
   revealEls.forEach(el => observer.observe(el));
 }
 
-// ==================== STATS COUNTER ====================
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target);
-  const duration = 1800;
-  const step = target / (duration / 16);
-  let current = 0;
-
-  const tick = () => {
-    current = Math.min(current + step, target);
-    el.textContent = Math.floor(current).toLocaleString() + (el.dataset.suffix || '+');
-    if (current < target) requestAnimationFrame(tick);
-    else el.textContent = target.toLocaleString() + (el.dataset.suffix || '+');
-  };
-  tick();
-}
-
-function initStatsCounter() {
-  const statNums = document.querySelectorAll('.stat-number[data-target]');
-  if (!('IntersectionObserver' in window)) {
-    statNums.forEach(el => el.textContent = el.dataset.target + '+');
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  statNums.forEach(el => observer.observe(el));
-}
-
 // ==================== NEWSLETTER ====================
 const nlBtn = document.getElementById('nl-subscribe');
 const nlEmail = document.getElementById('nl-email');
